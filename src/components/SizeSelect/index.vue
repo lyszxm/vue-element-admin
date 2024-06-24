@@ -4,9 +4,13 @@
       <svg-icon class-name="size-icon" icon-class="size" />
     </div>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size===item.value" :command="item.value">
-        {{
-          item.label }}
+      <el-dropdown-item
+        v-for="item of sizeOptions"
+        :key="item.value"
+        :disabled="size === item.value"
+        :command="item.value"
+      >
+        {{ item.label }}
       </el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
@@ -31,6 +35,7 @@ export default {
   },
   methods: {
     handleSetSize(size) {
+      console.log('$ELEMENT_', this.$ELEMENT)
       this.$ELEMENT.size = size
       this.$store.dispatch('app/setSize', size)
       this.refreshView()
@@ -41,6 +46,7 @@ export default {
     },
     refreshView() {
       // In order to make the cached page re-rendered
+      // 为了使缓存的页面重新呈现 --keep-alive的include的变为了[] 而我们store的visitedView是没有变的
       this.$store.dispatch('tagsView/delAllCachedViews', this.$route)
 
       const { fullPath } = this.$route
@@ -52,6 +58,5 @@ export default {
       })
     }
   }
-
 }
 </script>

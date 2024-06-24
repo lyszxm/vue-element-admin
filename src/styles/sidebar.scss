@@ -176,6 +176,7 @@
     }
   }
 
+  /* 不要左侧栏和右边栏的过度动画,让其生硬起来 */
   .withoutAnimation {
 
     .main-container,
@@ -185,7 +186,7 @@
   }
 }
 
-// when menu collapsed
+// when menu collapsed 当菜单折叠时
 .el-menu--vertical {
   &>.el-menu {
     .svg-icon {

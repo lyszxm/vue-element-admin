@@ -10,6 +10,8 @@
 </template>
 
 <script>
+// https://juejin.cn/post/6865494890747265038
+// https://juejin.cn/post/7092899160399020040/#heading-12
 import pathToRegexp from 'path-to-regexp'
 
 export default {
@@ -33,9 +35,11 @@ export default {
   methods: {
     getBreadcrumb() {
       // only show routes with meta.title
+      // https://v3.router.vuejs.org/zh/api/#%E8%B7%AF%E7%94%B1%E5%AF%B9%E8%B1%A1
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
+      console.log(matched)
       const first = matched[0]
-
+      // 如果你不是dashboard页(404等页的话因为他们都是一级路由 就要默认加个这个首页的面包屑比较好)
       if (!this.isDashboard(first)) {
         matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
       }

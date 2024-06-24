@@ -13,7 +13,7 @@ export default {
   name: 'SvgIcon',
   props: {
     iconClass: {
-      type: String,
+      type: String, // 可以传外链
       required: true
     },
     className: {
@@ -22,12 +22,15 @@ export default {
     }
   },
   computed: {
+    // 是不是外链
     isExternal() {
       return isExternal(this.iconClass)
     },
+    // 项目内图标
     iconName() {
       return `#icon-${this.iconClass}`
     },
+    // 添加class
     svgClass() {
       if (this.className) {
         return 'svg-icon ' + this.className
@@ -35,6 +38,9 @@ export default {
         return 'svg-icon'
       }
     },
+    /**
+     * 外部图标样式
+     */
     styleExternalIcon() {
       return {
         mask: `url(${this.iconClass}) no-repeat 50% 50%`,
@@ -56,7 +62,7 @@ export default {
 
 .svg-external-icon {
   background-color: currentColor;
-  mask-size: cover!important;
+  mask-size: cover !important;
   display: inline-block;
 }
 </style>

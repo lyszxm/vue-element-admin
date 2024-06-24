@@ -130,6 +130,7 @@ export function byteLength(str) {
 }
 
 /**
+ * @description:不要原来的array  返回一个新的地址的array内容一样
  * @param {Array} actual
  * @returns {Array}
  */
@@ -214,6 +215,7 @@ export function objectMerge(target, source) {
 }
 
 /**
+ * @description:找到element上的class字符串 ，如果有className这个类，就替换，没有直接接上
  * @param {HTMLElement} element
  * @param {string} className
  */
@@ -309,6 +311,7 @@ export function deepClone(source) {
 }
 
 /**
+ * @description:数组去重
  * @param {Array} arr
  * @returns {Array}
  */
@@ -326,7 +329,7 @@ export function createUniqueString() {
 }
 
 /**
- * Check if an element has a class
+ * @description: Check if an element has a class
  * @param {HTMLElement} elm
  * @param {string} cls
  * @returns {boolean}
@@ -336,7 +339,7 @@ export function hasClass(ele, cls) {
 }
 
 /**
- * Add class to element
+ * @description: Add class to element (单纯添加 class类)
  * @param {HTMLElement} elm
  * @param {string} cls
  */
@@ -345,7 +348,7 @@ export function addClass(ele, cls) {
 }
 
 /**
- * Remove class from element
+ * @description:Add class to element (单纯移除 class类,若有的话)
  * @param {HTMLElement} elm
  * @param {string} cls
  */
