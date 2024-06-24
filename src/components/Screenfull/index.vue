@@ -1,10 +1,13 @@
 <template>
   <div>
-    <svg-icon :icon-class="isFullscreen?'exit-fullscreen':'fullscreen'" @click="click" />
+    <svg-icon :icon-class="isFullscreen ? 'exit-fullscreen' : 'fullscreen'" @click="click" />
   </div>
 </template>
 
 <script>
+// https://zhuanlan.zhihu.com/p/414783738
+// https://juejin.cn/post/7109268961161642021#heading-3
+// http://www.npmdoc.org/screenfullzhongwenwendangscreenfull-jszhongwenjiaochengjiexi.html/
 import screenfull from 'screenfull'
 
 export default {
@@ -52,7 +55,7 @@ export default {
 .screenfull-svg {
   display: inline-block;
   cursor: pointer;
-  fill: #5a5e66;;
+  fill: #5a5e66;
   width: 20px;
   height: 20px;
   vertical-align: 10px;

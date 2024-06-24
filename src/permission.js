@@ -1,7 +1,7 @@
 import router from './router'
 import store from './store'
 import { Message } from 'element-ui'
-import NProgress from 'nprogress' // progress bar
+import NProgress from 'nprogress' // progress bar -- https://juejin.cn/post/6917801127065550856
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
@@ -39,11 +39,11 @@ router.beforeEach(async(to, from, next) => {
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
-          // dynamically add accessible routes
+          // dynamically add accessible routes 动态添加访问路线
           router.addRoutes(accessRoutes)
 
-          // hack method to ensure that addRoutes is complete
-          // set the replace: true, so the navigation will not leave a history record
+          // hack method to ensure that addRoutes is complete  方法确保addRoutes完成
+          // set the replace: true, so the navigation will not leave a history record 所以导航不会留下历史记录
           next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login

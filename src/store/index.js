@@ -7,14 +7,17 @@ Vue.use(Vuex)
 // https://webpack.js.org/guides/dependency-management/#requirecontext
 const modulesFiles = require.context('./modules', true, /\.js$/)
 
+// console.log(modulesFiles.keys()) //返回的是['./app.js', './errorLog.js', './permission.js', './settings.js', './tagsView.js', './user.js']
+
 // you do not need `import app from './modules/app'`
 // it will auto require all vuex module from modules file
 const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   // set './app.js' => 'app'
   const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
-  const value = modulesFiles(modulePath)
+  // console.log(moduleName) // 每个名称 如 app   errorlog等
+  const value = modulesFiles(modulePath) // 通过返回的函数调用来进行批量require
   modules[moduleName] = value.default
-  return modules
+  return modules // 数组里存的是类似[app:require('./app.js')......]
 }, {})
 
 const store = new Vuex.Store({

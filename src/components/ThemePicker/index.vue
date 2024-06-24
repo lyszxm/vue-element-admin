@@ -1,7 +1,7 @@
 <template>
   <el-color-picker
     v-model="theme"
-    :predefine="['#409EFF', '#1890ff', '#304156','#212121','#11a983', '#13c2c2', '#6959CD', '#f5222d', ]"
+    :predefine="['#409EFF', '#1890ff', '#304156', '#212121', '#11a983', '#13c2c2', '#6959CD', '#f5222d']"
     class="theme-picker"
     popper-class="theme-picker-dropdown"
   />
@@ -45,9 +45,16 @@ export default {
         iconClass: 'el-icon-loading'
       })
 
+      /**
+       * @description: 处理样式并把新的样式通过style引入到html中达到换肤
+       * @param {String} variable 属性名称名
+       * @param {String} id 样式标签的属性id
+       * @return {*}
+       */
       const getHandler = (variable, id) => {
         return () => {
           const originalCluster = this.getThemeCluster(ORIGINAL_THEME.replace('#', ''))
+          // 已返回新的css字符串样式
           const newStyle = this.updateStyle(this[variable], originalCluster, themeCluster)
 
           let styleTag = document.getElementById(id)
@@ -60,6 +67,7 @@ export default {
         }
       }
 
+      // 判断是否已有样式表，没有则根据url请求样式表内容
       if (!this.chalk) {
         const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
         await this.getCSSString(url, 'chalk')
@@ -69,11 +77,10 @@ export default {
 
       chalkHandler()
 
-      const styles = [].slice.call(document.querySelectorAll('style'))
-        .filter(style => {
-          const text = style.innerText
-          return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
-        })
+      const styles = [].slice.call(document.querySelectorAll('style')).filter(style => {
+        const text = style.innerText
+        return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
+      })
       styles.forEach(style => {
         const { innerText } = style
         if (typeof innerText !== 'string') return
@@ -87,14 +94,27 @@ export default {
   },
 
   methods: {
+    /**
+     * @description: 更新主题系列色
+     * @param {String} style  字符串css样式  即上面的this.chalk
+     * @param {Array} oldCluster 原来之前的颜色所形成的系列色
+     * @param {Array} newCluster 根据新的颜色形成的系类色
+     * @return {String}
+     */
     updateStyle(style, oldCluster, newCluster) {
+      console.log(arguments)
       let newStyle = style
       oldCluster.forEach((color, index) => {
         newStyle = newStyle.replace(new RegExp(color, 'ig'), newCluster[index])
       })
       return newStyle
     },
-
+    /**
+     * @description: 初始化时获取默认主题的样式并复制给this.chalk
+     * @param {String} url   获取样式表的路径
+     * @param {String} variable    变量属性名
+     * @return {Promise}
+     */
     getCSSString(url, variable) {
       return new Promise(resolve => {
         const xhr = new XMLHttpRequest()
@@ -108,14 +128,19 @@ export default {
         xhr.send()
       })
     },
-
+    /**
+     * @description: 获取到系列色0-9
+     * @param {string} theme
+     * @return {array}
+     */
     getThemeCluster(theme) {
       const tintColor = (color, tint) => {
         let red = parseInt(color.slice(0, 2), 16)
         let green = parseInt(color.slice(2, 4), 16)
         let blue = parseInt(color.slice(4, 6), 16)
 
-        if (tint === 0) { // when primary color is in its rgb space
+        if (tint === 0) {
+          // when primary color is in its rgb space
           return [red, green, blue].join(',')
         } else {
           red += Math.round(tint * (255 - red))
@@ -151,6 +176,7 @@ export default {
         clusters.push(tintColor(theme, Number((i / 10).toFixed(2))))
       }
       clusters.push(shadeColor(theme, 0.1))
+      // console.log(clusters)
       return clusters
     }
   }

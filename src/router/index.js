@@ -11,25 +11,26 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
-
+// import smallFunRouter from './modules/smallFunction'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
  *
  * hidden: true                   if set true, item will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
+ *                                if not set alwaysShow, when item has more than one children route,如果设置为true，将始终显示根菜单
+*如果不设置alwaysShow，当项目有多个子路由时，
+ *                                it will becomes nested mode, otherwise not show the root menu  它将变为嵌套模式，否则不显示根菜单
+ * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb // !如果设置了no重定向，则不会在痕迹导航中重定向
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
+    roles: ['admin','editor']    control the page roles (you can set multiple roles) // ! 控制页面角色（您可以设置多个角色）
+    title: 'title'               the name show in sidebar and breadcrumb (recommend set) // ! 侧边栏和breadcrumb中显示的名称（推荐集）
     icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    noCache: true                if set true, the page will no be cached(default is false)
-    affix: true                  if set true, the tag will affix in the tags-view
+    noCache: true                if set true, the page will no be cached(default is false)// !如果设置为 true，则不会缓存页面（默认值为 false）
+    affix: true                  if set true, the tag will affix in the tags-view // !如果设置为 true，则标签将贴在标签视图中
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set // ! 如果设置了路径，侧边栏将突出显示您设置的路径
   }
  */
 
@@ -37,6 +38,9 @@ import nestedRouter from './modules/nested'
  * constantRoutes
  * a base page that does not have permission requirements
  * all roles can be accessed
+ * * 常量路由
+ * 没有权限要求的基本页面
+ * 所有角色都可以访问
  */
 export const constantRoutes = [
   {
@@ -127,6 +131,7 @@ export const constantRoutes = [
 /**
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
+ * 需要根据用户角色动态加载的路由
  */
 export const asyncRoutes = [
   {
@@ -146,6 +151,7 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/page'),
         name: 'PagePermission',
         meta: {
+          alwaysShow: true,
           title: 'Page Permission',
           roles: ['admin'] // or you can only set roles in sub nav
         }
@@ -155,6 +161,7 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/directive'),
         name: 'DirectivePermission',
         meta: {
+          alwaysShow: true,
           title: 'Directive Permission'
           // if do not set roles, means: this page does not require permission
         }
@@ -166,7 +173,16 @@ export const asyncRoutes = [
         meta: {
           title: 'Role Permission',
           roles: ['admin']
-        }
+        },
+        alwaysShow: true,
+        children: [
+          {
+            path: 'list3',
+            component: () => import('@/views/example/list'),
+            name: 'ArticleList2',
+            meta: { title: 'Article List39999999999999', icon: 'list' }
+          }
+        ]
       }
     ]
   },
@@ -174,6 +190,9 @@ export const asyncRoutes = [
   {
     path: '/icon',
     component: Layout,
+    name: 'All icon',
+    alwaysShow: true,
+    meta: { title: 'Icons', icon: 'icon', noCache: true },
     children: [
       {
         path: 'index',
@@ -184,12 +203,11 @@ export const asyncRoutes = [
     ]
   },
 
-  /** when your routing map is too long, you can split it into small modules **/
+  /** when your routing map is too long, you can split it into small modules 当您的路由映射太长时，您可以将其拆分为小模块 * **/
   componentsRouter,
   chartsRouter,
   nestedRouter,
   tableRouter,
-
   {
     path: '/example',
     component: Layout,
@@ -218,6 +236,30 @@ export const asyncRoutes = [
         component: () => import('@/views/example/list'),
         name: 'ArticleList',
         meta: { title: 'Article List', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/list',
+    name: 'Example',
+    meta: {
+      title: 'Example',
+      icon: 'el-icon-s-help'
+    },
+    children: [
+      {
+        path: 'create2',
+        component: () => import('@/views/example/create'),
+        name: 'CreateArticle2',
+        meta: { title: 'Create Article2', icon: 'edit' }
+      },
+      {
+        path: 'list2',
+        component: () => import('@/views/example/list'),
+        name: 'ArticleList2',
+        meta: { title: 'Article List2', icon: 'list' }
       }
     ]
   },
@@ -383,15 +425,17 @@ export const asyncRoutes = [
     ]
   },
 
+  // smallFunRouter,
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 

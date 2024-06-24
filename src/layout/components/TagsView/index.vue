@@ -5,18 +5,18 @@
         v-for="tag in visitedViews"
         ref="tag"
         :key="tag.path"
-        :class="isActive(tag)?'active':''"
+        :class="isActive(tag) ? 'active' : ''"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
         tag="span"
         class="tags-view-item"
-        @click.middle.native="!isAffix(tag)?closeSelectedTag(tag):''"
-        @contextmenu.prevent.native="openMenu(tag,$event)"
+        @click.middle.native="!isAffix(tag) ? closeSelectedTag(tag) : ''"
+        @contextmenu.prevent.native="openMenu(tag, $event)"
       >
         {{ tag.title }}
         <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
-    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
+    <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">Refresh</li>
       <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">Close</li>
       <li @click="closeOthersTags">Close Others</li>
@@ -66,12 +66,28 @@ export default {
     this.addTags()
   },
   methods: {
+    /**
+     * @description: 是当前的路由吗
+     * @param {*} route
+     * @return {Boolean}
+     */
     isActive(route) {
       return route.path === this.$route.path
     },
+    /**
+     * @description: 是有meta.affix固定在tag上的吗
+     * @param {*} tag
+     * @return {Boolean}
+     */
     isAffix(tag) {
       return tag.meta && tag.meta.affix
     },
+    /**
+     * @description: 递归拿出路由包含meta.affix的路由
+     * @param {*} routes
+     * @param {*} basePath
+     * @return {Array}
+     */
     filterAffixTags(routes, basePath = '/') {
       let tags = []
       routes.forEach(route => {
@@ -93,8 +109,12 @@ export default {
       })
       return tags
     },
+    /**
+     * @description: 初始化VisitedView  里面的tags
+     * @return {*}
+     */
     initTags() {
-      const affixTags = this.affixTags = this.filterAffixTags(this.routes)
+      const affixTags = (this.affixTags = this.filterAffixTags(this.routes))
       for (const tag of affixTags) {
         // Must have tag name
         if (tag.name) {
@@ -102,9 +122,14 @@ export default {
         }
       }
     },
+    /**
+     * @description: 获取当前的路由并加到tags中
+     * @return {*}
+     */
     addTags() {
       const { name } = this.$route
       if (name) {
+        // !这里的最好不要直接传进去this.$route,会有循环引用问题
         this.$store.dispatch('tagsView/addView', this.$route)
       }
       return false
@@ -134,6 +159,11 @@ export default {
         })
       })
     },
+    /**
+     * @description: 关闭当前的打开的
+     * @param {*} view
+     * @return {*}
+     */
     closeSelectedTag(view) {
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
@@ -162,6 +192,8 @@ export default {
       } else {
         // now the default is to redirect to the home page if there is no tags-view,
         // you can adjust it according to your needs.
+        // 现在默认是如果没有标签视图，则重定向到主页，
+        // 您可以根据需要进行调整。
         if (view.name === 'Dashboard') {
           // to reload home page
           this.$router.replace({ path: '/redirect' + view.fullPath })
@@ -170,6 +202,12 @@ export default {
         }
       }
     },
+    /**
+     * @description: 打开右键menu菜单
+     * @param {*} tag
+     * @param {*} e
+     * @return {*}
+     */
     openMenu(tag, e) {
       const menuMinWidth = 105
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
@@ -203,7 +241,7 @@ export default {
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -252,7 +290,7 @@ export default {
     font-size: 12px;
     font-weight: 400;
     color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
     li {
       margin: 0;
       padding: 7px 16px;
@@ -275,10 +313,10 @@ export default {
       vertical-align: 2px;
       border-radius: 50%;
       text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
       &:before {
-        transform: scale(.6);
+        transform: scale(0.6);
         display: inline-block;
         vertical-align: -3px;
       }

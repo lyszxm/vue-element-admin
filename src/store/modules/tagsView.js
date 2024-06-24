@@ -40,9 +40,10 @@ const mutations = {
   DEL_OTHERS_CACHED_VIEWS: (state, view) => {
     const index = state.cachedViews.indexOf(view.name)
     if (index > -1) {
-      state.cachedViews = state.cachedViews.slice(index, index + 1)
+      state.cachedViews = state.cachedViews.slice(index, index + 1) // 只复制它自己给cachedViews
+      // console.log(state.cachedViews, index)
     } else {
-      // if index = -1, there is no cached tags
+      // if index = -1, there is no cached tags 没有缓存的标签
       state.cachedViews = []
     }
   },
@@ -142,7 +143,9 @@ const actions = {
   },
   delAllCachedViews({ commit, state }) {
     return new Promise(resolve => {
-      commit('DEL_ALL_CACHED_VIEWS')
+      // console.log([...state.cachedViews])
+      commit('DEL_ALL_CACHED_VIEWS') // 这里commit后改变了state为[]
+      // console.log([...state.cachedViews]) // []
       resolve([...state.cachedViews])
     })
   },

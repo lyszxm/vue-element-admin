@@ -58,12 +58,13 @@ export default {
   },
   methods: {
     hasOneShowingChild(children = [], parent) {
-      const showingChildren = children.filter(item => {
+      const showingChildren = children?.filter(item => {
         if (item.hidden) {
           return false
         } else {
           // Temp set(will be used if only has one showing child)
-          this.onlyOneChild = item
+          // 临时设置(如果只有一个显示子对象，则使用)
+          this.onlyOneChild = item // 这里真的是对最底层来进行记录并使用的变量,因为有孩子的父亲都是使用组件的props的item来进行显示的
           return true
         }
       })
@@ -74,7 +75,7 @@ export default {
       }
 
       // Show parent if there are no child router to display
-      if (showingChildren.length === 0) {
+      if (showingChildren == null || showingChildren.length === 0) {
         this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
         return true
       }

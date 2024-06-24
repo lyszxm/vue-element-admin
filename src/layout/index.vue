@@ -1,13 +1,21 @@
 <template>
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+
+    <!-- 全部的左边 -->
     <sidebar class="sidebar-container" />
+
+    <!-- 全部的右边 -->
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
+        <!-- tags -->
         <tags-view v-if="needTagsView" />
       </div>
+
+      <!-- 中间显示栏 -->
       <app-main />
+      <!-- 右边的设置栏 -->
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
